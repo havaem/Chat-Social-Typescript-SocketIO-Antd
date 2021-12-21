@@ -1,0 +1,24 @@
+.collapse-button {
+	display: none;
+	position: fixed;
+	top: 70px;
+	align-items: center;
+	justify-content: center;
+	width: 35px;
+	height: 35px;
+	outline: none;
+	border-radius: 0 6px 6px 0;
+	cursor: pointer;
+	background-color: #fff;
+	z-index: 100;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+	border: 0.5px solid #ccc;
+	border-left: unset;
+	@media (max-width: 991.98px) {
+		display: flex;
+		left: 0px;
+		&.open {
+			left: 280px;
+		}
+	}
+}

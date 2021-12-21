@@ -1,0 +1,30 @@
+@import "../../sass/common";
+.home {
+	padding: 84px 20px 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 30px 0;
+	min-height: 100vh;
+	background: url("../../assets/images/4907157.jpg") no-repeat center center;
+	img {
+		max-width: 300px;
+		width: 100%;
+		animation: ring 0.5s linear alternate infinite;
+	}
+	&_wrapper {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		p {
+			text-align: center;
+			color: #3b3b3b;
+		}
+		&-button {
+			display: flex;
+			align-items: center;
+			gap: 0 15px;
+		}
+	}
+}

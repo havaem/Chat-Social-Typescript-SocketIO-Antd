@@ -1,0 +1,19 @@
+.footer {
+	background: white;
+	padding-inline: 20px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0 5px;
+	a {
+		font-weight: bold;
+	}
+}
+.isLogin {
+	margin-left: 200px;
+	transition: 0.4s;
+	@media (max-width: 991.98px) {
+		margin-left: 0;
+	}
+}

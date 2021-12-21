@@ -1,0 +1,16 @@
+exports.message = {
+	userCreated: "User created successfully!",
+	userNotFound: "User not found!",
+	userVerify: "Please verify your account!",
+	userWasBanned: "Account was banned! Contact me for any questions.",
+	userWrongPassword: "Password incorrect!",
+	userEmailNotVerified: "Email address is not verified!",
+	userNotVerified: "Your account is not verified!",
+	userUpdated: "User updated successfully!",
+	userDeleted: "User deleted successfully!",
+	userVerified: "Successful verification!",
+	userForgetPassword: "We sent a password reset link to your email!",
+	userResetPassword: "Password reset successfully!",
+	userChangePassword: "Password changed successfully!",
+	userUpdate: "User updated successfully!",
+};

@@ -1,0 +1,40 @@
+@import "../../sass/common";
+.login {
+	padding: 20px 20px 20px;
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	background: rgb(2, 0, 36);
+	background: linear-gradient(
+		90deg,
+		rgba(2, 0, 36, 1) 0%,
+		rgba(121, 9, 21, 1) 0%,
+		rgba(0, 212, 255, 1) 100%
+	);
+	form {
+		max-width: 600px;
+		width: 100%;
+		padding: 15px 20px;
+		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+		background: white;
+		border-radius: 7px;
+	}
+	&_button {
+		.ant-form-item-control-input-content {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+		button {
+			width: 100%;
+		}
+	}
+	&_form-title {
+		text-align: center;
+		font-size: 32px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+}

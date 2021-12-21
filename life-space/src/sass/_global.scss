@@ -1,0 +1,19 @@
+.ant-form-item-explain-error {
+	font-size: 12px;
+	font-weight: 500;
+}
+.ant-notification-notice-message {
+	font-size: 14px;
+	font-weight: 600;
+}
+body {
+	background: #eef3f7;
+}
+.resize {
+	padding: 84px 20px 20px;
+	margin-left: 280px;
+	transition: 0.4s;
+	@media (max-width: 991.98px) {
+		margin-left: 0;
+	}
+}

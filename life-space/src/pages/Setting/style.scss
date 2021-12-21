@@ -1,0 +1,37 @@
+.setting {
+	display: flex;
+	flex-direction: column;
+	gap: 20px 0;
+
+	.ant-tabs-tab {
+		padding: 10px 20px;
+		color: rgb(114, 132, 154);
+		transition: 0.4s;
+		&.ant-tabs-tab-active {
+			background: white;
+		}
+	}
+	&_account {
+		display: flex;
+		flex-direction: column;
+		gap: 20px 0;
+		.setting_tab {
+			&-basic {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 20px 0;
+				.basic_avatar {
+					cursor: pointer;
+					border: 1px solid #ddd;
+				}
+				.basic_form {
+					width: 100%;
+				}
+			}
+			&-password {
+				margin-top: 20px;
+			}
+		}
+	}
+}
