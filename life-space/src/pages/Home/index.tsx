@@ -34,6 +34,6 @@ export default function Home(props: Props): ReactElement {
 			</div>
 		</Content>
 	) : (
-		<Navigate to="/dashboard" />
+		<Navigate to="/profile" />
 	);
 }

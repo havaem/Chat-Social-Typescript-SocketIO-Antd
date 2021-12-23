@@ -12,7 +12,6 @@ const {
 	updateUser,
 } = require("../controllers/user");
 const Router = express.Router();
-
 // Control
 Router.route("/register").post(register);
 Router.route("/login").post(login);

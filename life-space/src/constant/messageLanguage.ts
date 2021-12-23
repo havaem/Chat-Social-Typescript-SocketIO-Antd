@@ -1,5 +1,9 @@
 const messageConstant = [
 	{
+		eng: "No bio",
+		vn: "Không có tiểu sử nào",
+	},
+	{
 		eng: "QR Code",
 		vn: "Mã QR",
 	},

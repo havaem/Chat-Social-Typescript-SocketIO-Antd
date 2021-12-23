@@ -80,3 +80,7 @@ exports.userDataResponse = (user) => {
 	data.token = this.signToken(user._id, 1440);
 	return data;
 };
+
+exports.randomString = (length) => {
+	return Math.random().toString(36).substr(2, length);
+};

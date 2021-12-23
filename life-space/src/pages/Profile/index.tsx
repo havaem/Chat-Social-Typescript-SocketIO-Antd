@@ -15,9 +15,10 @@ import {
 import "./style.scss";
 import { translateMessage } from "constant/messageLanguage";
 import Paragraph from "antd/lib/typography/Paragraph";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
-export default function Dashboard(): ReactElement {
+export default function Profile(): ReactElement {
+	const { slug } = useParams();
 	const isLoading = useAppSelector((state) => state.user.isLoading);
 	const userData = useAppSelector((state) => state.user.data);
 	const isLogin = useAppSelector((state) => state.user.data._id) ? true : false;
@@ -30,16 +31,17 @@ export default function Dashboard(): ReactElement {
 			),
 		});
 	};
+	// useLayoutEffect(() => {}, [slug]);
 	return isLogin ? (
 		<>
-			<Layout className="dashboard resize">
+			<Layout className="profile resize">
 				<Card bordered={false}>
 					{isLoading ? (
 						<Skeleton avatar paragraph={{ rows: 4 }} />
 					) : (
-						<Row gutter={[8, 16]} className="dashboard_card">
+						<Row gutter={[8, 16]} className="profile_card">
 							<Col xs={24} sm={24} md={15}>
-								<div className="dashboard_card-content">
+								<div className="profile_card-content">
 									<Avatar size={150} src={userData.avatar} className="content_avatar" />
 									<div className="content_info">
 										<p className="content_info-name">
@@ -72,8 +74,8 @@ export default function Dashboard(): ReactElement {
 									</div>
 								</div>
 							</Col>
-							<Col xs={24} sm={24} md={9} className="dashboard_card-wrapper">
-								<div className="dashboard_card-info">
+							<Col xs={24} sm={24} md={9} className="profile_card-wrapper">
+								<div className="profile_card-info">
 									{userData.birthday && (
 										<div className="info_item">
 											<div className="info_item-title">
@@ -100,7 +102,7 @@ export default function Dashboard(): ReactElement {
 										</div>
 									)}
 								</div>
-								<div className="dashboard_card-social">
+								<div className="profile_card-social">
 									<Tooltip title="Facebook">
 										<Button
 											type="link"
@@ -141,11 +143,7 @@ export default function Dashboard(): ReactElement {
 									symbol: translateMessage(userData.language, "More"),
 								}}
 							>
-								Đây là dòng giới thiệu ngắn vè tiểu sử Đây là dòng giới thiệu ngắn vè tiểu sử
-								Đây là dòng giới thiệu ngắn vè tiểu sửĐây là dòng giới thiệu ngắn vè tiểu sử
-								Đây là dòng giới thiệu ngắn vè tiểu sử Đây là dòng giới thiệu ngắn vè tiểu
-								sửĐây là dòng giới thiệu ngắn vè tiểu sử Đây là dòng giới thiệu ngắn vè tiểu
-								sử Đây là dòng giới thiệu ngắn vè tiểu sử
+								{userData.bio ? userData.bio : translateMessage(userData.language, "No bio")}
 							</Paragraph>
 						</Card>
 					</Col>

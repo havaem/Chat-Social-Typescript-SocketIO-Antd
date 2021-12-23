@@ -2,11 +2,11 @@ import { useAppSelector } from "app/hook";
 import { pathConstants } from "constant/pathConstant";
 import MainLayout from "layouts/MainLayout";
 import UserLayout from "layouts/UserLayout";
-import Dashboard from "pages/Dashboard";
 import ForgetPassword from "pages/ForgetPassword";
 import Home from "pages/Home";
 import Login from "pages/Login";
 import Notfound from "pages/Notfound";
+import Profile from "pages/Profile";
 import Register from "pages/Register";
 import ResetPassword from "pages/ResetPassword";
 import Setting from "pages/Setting";
@@ -30,7 +30,8 @@ export default function AppRoute(): ReactElement {
 					</>
 				) : (
 					<>
-						<Route path={pathConstants.dashboard} element={<Dashboard />} />
+						<Route path={pathConstants.profile} element={<Profile />} />
+						<Route path={`${pathConstants.profile}/:slug`} element={<Profile />} />
 						<Route path={pathConstants.setting} element={<Setting />} />
 					</>
 				)}

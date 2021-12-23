@@ -5,6 +5,6 @@ export const pathConstants = {
 	verify: "/verify/:token",
 	forgetPassword: "/forget-password",
 	resetPassword: "/reset-password/:token",
-	dashboard: "/dashboard",
+	profile: "/profile",
 	setting: "/setting",
 };

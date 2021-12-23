@@ -17,10 +17,10 @@ export default function UserLayout(): ReactElement {
 	const userData = useAppSelector((state) => state.user.data);
 	const menuItems = [
 		{
-			key: "dashboard",
+			key: "profile",
 			icon: <UserOutlined />,
 			title: translateMessage(userData.language, "Profile"),
-			link: "/dashboard",
+			link: "/profile",
 		},
 		{
 			key: "setting",
@@ -32,7 +32,7 @@ export default function UserLayout(): ReactElement {
 	const getMenuActive = () => {
 		const pathname = location.pathname;
 		const menuItem = menuItems.find((item) => item.link === pathname);
-		return menuItem ? menuItem.key : "dashboard";
+		return menuItem ? menuItem.key : "profile";
 	};
 	return (
 		<>

@@ -2,13 +2,14 @@ import { Card, Col, message, Row, Tooltip, Form, Input, DatePicker, Select, Butt
 import Avatar from "antd/lib/avatar/avatar";
 import { Content } from "antd/lib/layout/layout";
 import { translateMessage } from "constant/messageLanguage";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import ImgCrop from "antd-img-crop";
 import { Upload } from "antd";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "app/hook";
 import { userChangePassword, userUpdate } from "reducers/asyncThunk/userThunk";
 import { openNoti } from "utils/Notification";
+import { imageCreateOne } from "reducers/asyncThunk/imageThunk";
 interface Props {
 	data: any;
 }
@@ -16,19 +17,38 @@ interface Props {
 export default function AccountTab({ data }: Props): ReactElement {
 	const dispatch = useAppDispatch();
 	const isLoading = useAppSelector((state) => state.user.isLoading);
-	const [userData, setUserData] = useState(data);
-	const beforeUpload = (file: any) => {
+	const [userAvatar, setUserAvatar] = useState(data.avatar);
+	const beforeUpload = async (file: any) => {
 		const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-		const isLt2M = file.size / 1024 / 1024 < 5;
+		const isLt2M = file.size / 1024 / 1024 < 2;
 		if (!isJpgOrPng) {
 			message.error("You can only upload JPG/PNG file!");
 		}
 		if (!isLt2M) {
-			message.warning("Image must smaller than 5MB!");
+			message.warning("Image must smaller than 2MB!");
 		}
 		if (isJpgOrPng && isLt2M) {
-			const url = window.URL.createObjectURL(file);
-			setUserData({ ...userData, avatar: url });
+			const formData = new FormData();
+			formData.append("avatar", file);
+			formData.append("description", "Avatar");
+			try {
+				const responseImage = await dispatch(imageCreateOne(formData)).unwrap();
+				const response = await dispatch(userUpdate({ avatar: responseImage.url })).unwrap();
+				setUserAvatar(responseImage.url);
+				openNoti({
+					type: "success",
+					description: translateMessage(data.language, response.message),
+					message: translateMessage(data.language, "Success"),
+				});
+			} catch (error: any) {
+				openNoti({
+					type: "error",
+					message: translateMessage(data.language, "Failed"),
+					description: translateMessage(data.language, error.message),
+				});
+			}
+
+			return false;
 		}
 		return false;
 	};
@@ -39,7 +59,7 @@ export default function AccountTab({ data }: Props): ReactElement {
 		email: data.email,
 		phone: data.phone,
 		language: data.language,
-		birthday: moment(userData.birthday),
+		birthday: moment(data.birthday),
 	};
 	const handleSubmitChangeInfo = async (data: any) => {
 		try {
@@ -76,7 +96,7 @@ export default function AccountTab({ data }: Props): ReactElement {
 		}
 	};
 	const disabledDate = (current: any) => {
-		const userDate = moment(userData.birthday);
+		const userDate = moment(data.birthday);
 		const startTime = moment().date(0).month(0).year(1950);
 		const endTime = userDate;
 		return !(startTime.isSameOrBefore(current) && endTime.isAfter(current));
@@ -94,7 +114,7 @@ export default function AccountTab({ data }: Props): ReactElement {
 					>
 						<Upload beforeUpload={beforeUpload} showUploadList={false}>
 							<Tooltip title={translateMessage(data.language, "Update avatar")}>
-								<Avatar className="basic_avatar" src={userData.avatar} size={100} />
+								<Avatar className="basic_avatar" src={userAvatar} size={100} />
 							</Tooltip>
 						</Upload>
 					</ImgCrop>
@@ -111,7 +131,7 @@ export default function AccountTab({ data }: Props): ReactElement {
 									label={translateMessage(data.language, "Username")}
 									tooltip={translateMessage(data.language, "Username cannot be changed")}
 								>
-									<Input disabled={!userData.status.is_admin} />
+									<Input disabled={!data.status.is_admin} />
 								</Form.Item>
 							</Col>
 							<Col xs={24} sm={24} md={16} xl={16}>
@@ -123,7 +143,7 @@ export default function AccountTab({ data }: Props): ReactElement {
 										"Upgrade your account to use this feature"
 									)}
 								>
-									<Input disabled={!userData.status.is_admin} />
+									<Input disabled={!data.status.is_admin} />
 								</Form.Item>
 							</Col>
 						</Row>

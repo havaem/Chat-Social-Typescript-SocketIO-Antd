@@ -1,3 +1,4 @@
+import { logOut } from "reducers/userSlice";
 import { iLogin } from "./../../models/userModels";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AxiosError } from "axios";
@@ -73,22 +74,28 @@ export const userResetPassword = createAsyncThunk(
 		}
 	}
 );
+//dashboard
 export const userChangePassword = createAsyncThunk(
 	"user/userChangePassword",
-	async (data: any, { rejectWithValue }) => {
+	async (data: any, { dispatch, rejectWithValue }) => {
 		try {
 			const response = await userApi.changePassword(data);
 			return response.data;
 		} catch (error: AxiosError | any) {
+			error.status = 403 && dispatch(logOut());
 			return rejectWithValue(error.data);
 		}
 	}
 );
-export const userUpdate = createAsyncThunk("user/userUpdate", async (data: any, { rejectWithValue }) => {
-	try {
-		const response = await userApi.update(data);
-		return response.data;
-	} catch (error: AxiosError | any) {
-		return rejectWithValue(error.data);
+export const userUpdate = createAsyncThunk(
+	"user/userUpdate",
+	async (data: any, { dispatch, rejectWithValue }) => {
+		try {
+			const response = await userApi.update(data);
+			return response.data;
+		} catch (error: AxiosError | any) {
+			error.status = 403 && dispatch(logOut());
+			return rejectWithValue(error.data);
+		}
 	}
-});
+);

@@ -101,6 +101,24 @@ const userSchema = new Schema(
 			ref: "Level",
 			default: "61b350f9f05eea9480095366",
 		},
+		social: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Social",
+				username: {
+					type: String,
+					required: true,
+				},
+				status: {
+					type: Boolean,
+					default: false,
+				},
+			},
+		],
+		music: {
+			type: Schema.Types.ObjectId,
+			ref: "Music",
+		},
 	},
 	{
 		timestamps: true,

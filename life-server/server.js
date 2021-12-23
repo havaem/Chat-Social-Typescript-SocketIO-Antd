@@ -7,6 +7,7 @@ db();
 const app = express();
 const user = require("./routes/user");
 const level = require("./routes/level");
+const image = require("./routes/image");
 const { errorHandler } = require("./middlewares/errorHandler");
 
 app.use(cors());
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/level", level);
+app.use("/api/v1/image", image);
 app.use(errorHandler);
 
 app.get("*", (_req, res) => {
