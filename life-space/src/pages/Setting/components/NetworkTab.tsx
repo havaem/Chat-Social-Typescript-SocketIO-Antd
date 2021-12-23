@@ -12,9 +12,7 @@ export default function NetworkTab(props: Props): ReactElement {
 		<Card
 			bordered
 			className="setting_tab"
-			title={translateMessage(Cookies.get("language"), "Basic Infomation")}
-		>
-			Content of Tab Pane 2
-		</Card>
+			title={translateMessage(Cookies.get("language"), "Network Integration")}
+		></Card>
 	);
 }
