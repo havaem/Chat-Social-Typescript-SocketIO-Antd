@@ -1,7 +1,7 @@
 import { Button, Card, Col, Row, Modal, Tooltip, Skeleton, Layout } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import { useAppSelector } from "app/hook";
-import { ReactElement } from "react";
+import { useAppDispatch, useAppSelector } from "app/hook";
+import { ReactElement, useState } from "react";
 import QRCode from "qrcode";
 import {
 	MailTwoTone,
@@ -11,25 +11,91 @@ import {
 	TwitterOutlined,
 	GithubOutlined,
 	CheckCircleFilled,
+	InstagramOutlined,
+	DownloadOutlined,
+	HighlightOutlined,
 } from "@ant-design/icons";
 import "./style.scss";
 import { translateMessage } from "constant/messageLanguage";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Navigate, useParams } from "react-router-dom";
+import { userUpdate } from "reducers/asyncThunk/userThunk";
+import { openNoti } from "utils/Notification";
 
 export default function Profile(): ReactElement {
 	const { slug } = useParams();
+	const dispatch = useAppDispatch();
 	const isLoading = useAppSelector((state) => state.user.isLoading);
 	const userData = useAppSelector((state) => state.user.data);
 	const isLogin = useAppSelector((state) => state.user.data._id) ? true : false;
+	const [userDataBio, setUserDataBio] = useState(
+		userData.bio ? userData.bio : translateMessage(userData.language, "No bio")
+	);
 	const handleShowQRCode = async () => {
 		Modal.info({
 			centered: true,
 			maskClosable: true,
 			content: (
-				<img style={{ width: "100%" }} src={await QRCode.toDataURL(userData.slug)} alt="qrcode" />
+				<>
+					<img style={{ width: "100%" }} src={await QRCode.toDataURL(userData.slug)} alt="qrcode" />
+					<Button
+						download={`${userData.slug}.png`}
+						block
+						href={await QRCode.toDataURL(userData.slug)}
+						icon={<DownloadOutlined />}
+					>
+						{translateMessage(userData.language, "Download")}
+					</Button>
+				</>
 			),
 		});
+	};
+	const renderSocial = () =>
+		userData.social.map((item: any) => {
+			let Btn;
+			switch (item.social_id.name) {
+				case "Facebook":
+					Btn = <FacebookOutlined />;
+					break;
+				case "Twitter":
+					Btn = <TwitterOutlined />;
+					break;
+				case "Github":
+					Btn = <GithubOutlined />;
+					break;
+				case "Instagram":
+					Btn = <InstagramOutlined />;
+					break;
+				default:
+					return null;
+			}
+			return (
+				<Tooltip key={item._id} title={item.social_id.name}>
+					<Button
+						type="link"
+						href={item.social_id.prefix + item.username}
+						icon={Btn}
+						target="_blank"
+					></Button>
+				</Tooltip>
+			);
+		});
+	const handleChangeBio = async (value: any) => {
+		try {
+			setUserDataBio(value);
+			const response = await dispatch(userUpdate({ bio: value })).unwrap();
+			openNoti({
+				type: "success",
+				description: translateMessage(userData.language, response.message),
+				message: translateMessage(userData.language, "Success"),
+			});
+		} catch (error: any) {
+			openNoti({
+				type: "error",
+				message: translateMessage(userData.language, "Failed"),
+				description: translateMessage(userData.language, error.message),
+			});
+		}
 	};
 	// useLayoutEffect(() => {}, [slug]);
 	return isLogin ? (
@@ -102,32 +168,7 @@ export default function Profile(): ReactElement {
 										</div>
 									)}
 								</div>
-								<div className="profile_card-social">
-									<Tooltip title="Facebook">
-										<Button
-											type="link"
-											href="https://google.com"
-											icon={<FacebookOutlined />}
-											target="_blank"
-										></Button>
-									</Tooltip>
-									<Tooltip title="Twitter">
-										<Button
-											type="link"
-											href="https://google.com"
-											icon={<TwitterOutlined />}
-											target="_blank"
-										></Button>
-									</Tooltip>
-									<Tooltip title="Github">
-										<Button
-											type="link"
-											href="https://google.com"
-											icon={<GithubOutlined />}
-											target="_blank"
-										></Button>
-									</Tooltip>
-								</div>
+								<div className="profile_card-social">{renderSocial()}</div>
 							</Col>
 						</Row>
 					)}
@@ -142,8 +183,14 @@ export default function Profile(): ReactElement {
 									expandable: true,
 									symbol: translateMessage(userData.language, "More"),
 								}}
+								editable={{
+									tooltip: translateMessage(userData.language, "Click to edit your bio"),
+									onChange: handleChangeBio,
+									maxLength: 200,
+									autoSize: { maxRows: 10, minRows: 2 },
+								}}
 							>
-								{userData.bio ? userData.bio : translateMessage(userData.language, "No bio")}
+								{userDataBio}
 							</Paragraph>
 						</Card>
 					</Col>

@@ -26,7 +26,13 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
-		const user = await User.findOne({ username }).populate("level", "name benefits");
+		const user = await User.findOne({ username }).populate({
+			path: "social",
+			populate: {
+				path: "social_id",
+				select: "icon name prefix",
+			},
+		});
 		if (!user) return res.status(401).json({ message: message.userNotFound });
 		const isMatch = await comparePassword(password, user.password);
 		if (!isMatch) return res.status(401).json({ message: message.userWrongPassword });
@@ -43,7 +49,13 @@ exports.login = async (req, res, next) => {
 };
 exports.getCurrentUser = async (req, res, next) => {
 	try {
-		const user = await User.findOne({ _id: req.user._id });
+		const user = await User.findOne({ _id: req.user._id }).populate({
+			path: "social",
+			populate: {
+				path: "social_id",
+				select: "icon name prefix",
+			},
+		});
 		if (user) {
 			// * Start check
 			if (!user.status.is_verified) return res.status(401).json({ message: message.userVerify });
@@ -64,7 +76,13 @@ exports.loginGoogle = async (req, res, next) => {
 		if (!email_verified) {
 			return res.status(401).json({ message: message.userEmailNotVerified });
 		}
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ email }).populate({
+			path: "social",
+			populate: {
+				path: "social_id",
+				select: "icon name prefix",
+			},
+		});
 		if (user) {
 			// * Start check
 			if (!user.status.is_verified) return res.status(401).json({ message: message.userVerify });
@@ -171,16 +189,26 @@ exports.updateUser = async (req, res, next) => {
 	try {
 		const user = await User.findOne({ _id: req.user._id });
 		if (!user) return res.status(401).json({ message: message.userNotFound });
-		const { name, email, slug, language, avatar, phone, birthday } = req.body;
+		const { bio, name, email, slug, language, avatar, phone, birthday, social } = req.body;
 		if (email) user.email = email;
+		if (bio) user.bio = bio;
 		if (slug) user.slug = slug;
 		if (language) user.language = language;
 		if (name) user.name = name;
 		if (avatar) user.avatar = avatar;
+		if (social) user.social = social;
 		if (birthday) user.birthday = birthday;
 		if (phone) user.phone = phone;
 		await user.save();
-		const dataResponse = userDataResponse(user);
+		const dataResponse = userDataResponse(
+			await user.populate({
+				path: "social",
+				populate: {
+					path: "social_id",
+					select: "icon name prefix",
+				},
+			})
+		);
 		delete dataResponse.token;
 		res.status(200).json({
 			message: message.userUpdate,

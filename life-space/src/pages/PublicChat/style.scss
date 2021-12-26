@@ -1,0 +1,207 @@
+.public {
+	&_content {
+		height: calc(100vh - 104px);
+		&-row {
+			height: 100%;
+			.ant-card-body {
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
+			.row_chat {
+				height: 100%;
+				overflow: auto;
+				&-card,
+				&-sider {
+					height: 100%;
+					border: 1px solid #ddd;
+				}
+				&-sider {
+					width: 100%;
+				}
+				&-card {
+					border-radius: 0;
+					border-right: 0px;
+					.card_header {
+						border-bottom: 1px solid #ddd;
+						padding: 20px;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						h1 {
+							margin-bottom: 0;
+						}
+					}
+					.card_content {
+						&::-webkit-scrollbar {
+							width: 7px;
+						}
+						&::-webkit-scrollbar-track {
+							background: #f1f1f1;
+						}
+						&::-webkit-scrollbar-thumb {
+							background: #888;
+						}
+						&::-webkit-scrollbar-thumb:hover {
+							background: #555;
+						}
+						padding: 20px 0;
+						height: calc(100% - 142px);
+						overflow: auto;
+						&-item {
+							padding: 20px 10px;
+							display: flex;
+							gap: 0 10px;
+							.item_content {
+								flex: 1;
+							}
+							.item_content-name {
+								display: flex;
+								align-items: center;
+								gap: 0 5px;
+							}
+							.item_content-image {
+								img {
+									display: block;
+									height: 150px;
+								}
+							}
+							.item_content-text {
+								display: block;
+								.text-edited {
+									margin-left: 5px;
+									border-radius: 0;
+									border: 0;
+								}
+							}
+							.item_content-text,
+							.item_content-image {
+								position: relative;
+								transition: 0.15s;
+								&:hover {
+									border-left: 3px solid #1890ff;
+									padding-left: 2px;
+									background: #f0f0f0;
+									& .item_content-actions {
+										visibility: visible;
+										opacity: 1;
+									}
+								}
+							}
+							.item_content-actions {
+								visibility: hidden;
+								opacity: 0;
+								position: absolute;
+								top: 0;
+								right: 10px;
+								transform: translateY(-50%);
+								background: #4ca8ff;
+								display: flex;
+								font-size: 20px;
+								color: #fff;
+								border-radius: 5px;
+								overflow: hidden;
+								button {
+									border: none;
+									outline: none;
+									background: transparent;
+									cursor: pointer;
+									&:hover {
+										background: #4395e2;
+									}
+								}
+							}
+						}
+					}
+					.card_bottom {
+						border-top: 1px solid #ddd;
+						margin-top: auto;
+						padding: 10px 15px;
+						display: flex;
+						flex-wrap: wrap;
+						&-more {
+							width: 100%;
+							display: flex;
+							overflow: auto;
+							gap: 0 10px;
+							&::-webkit-scrollbar {
+								height: 10px;
+								position: absolute;
+							}
+							&::-webkit-scrollbar-track {
+								background: #f1f1f1;
+							}
+							&::-webkit-scrollbar-thumb {
+								background: #888;
+							}
+							&::-webkit-scrollbar-thumb:hover {
+								background: #555;
+							}
+						}
+						&-input {
+							width: 100%;
+							display: flex;
+							gap: 0 10px;
+						}
+						.input_image {
+							position: relative;
+							flex: 0 0 auto;
+							&-close {
+								position: absolute;
+								top: 0;
+								right: 0;
+								z-index: 100;
+							}
+						}
+					}
+				}
+			}
+			.row_online {
+				max-width: 270px;
+				width: 100%;
+				padding: 10px 0;
+				max-height: 100%;
+				background: #f2f3f5;
+				overflow: auto;
+				&-role {
+					margin: 0;
+					font-weight: 600;
+					font-size: 15px;
+					margin-bottom: 5px;
+					&.admin {
+						color: red;
+					}
+					&.mod {
+						color: #0000ff;
+					}
+					&.mem {
+						color: rgb(0, 170, 119);
+					}
+				}
+				&-item {
+					cursor: pointer;
+					padding: 10px 14px;
+					color: #000;
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 0 8px;
+					transition: 0.2s;
+					.item_name {
+						flex: 1;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+					&:hover {
+						background: #ffffff;
+					}
+				}
+			}
+		}
+	}
+}
+.role_menu {
+	padding: 5px 15px;
+}

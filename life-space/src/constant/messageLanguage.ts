@@ -1,5 +1,25 @@
 const messageConstant = [
 	{
+		eng: "Attach a photo",
+		vn: "Đính kèm ảnh",
+	},
+	{
+		eng: "Click to edit your bio",
+		vn: "Nhấn vào đây để chỉnh sửa tiếu sử",
+	},
+	{
+		eng: "Public Chat",
+		vn: "Phòng Chat Chung",
+	},
+	{
+		eng: "Download",
+		vn: "Tải xuống",
+	},
+	{
+		eng: "Network Integration",
+		vn: "Tích hợp mạng",
+	},
+	{
 		eng: "No bio",
 		vn: "Không có tiểu sử nào",
 	},
@@ -165,7 +185,7 @@ const messageConstant = [
 	},
 	{
 		eng: "Network",
-		vn: "Mạng",
+		vn: "Mạng xã hội",
 	},
 	{
 		eng: "Account",
@@ -193,11 +213,11 @@ const messageConstant = [
 	},
 	{
 		eng: "Profile",
-		vn: "Hồ sơ",
+		vn: "Hồ Sơ",
 	},
 	{
 		eng: "Settings",
-		vn: "Cài đặt",
+		vn: "Cài Đặt",
 	},
 	{
 		eng: "Server Error",

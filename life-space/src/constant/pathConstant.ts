@@ -7,4 +7,5 @@ export const pathConstants = {
 	resetPassword: "/reset-password/:token",
 	profile: "/profile",
 	setting: "/setting",
+	publicChat: "/public-chat",
 };

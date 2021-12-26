@@ -2,7 +2,7 @@ import { Card, Col, message, Row, Tooltip, Form, Input, DatePicker, Select, Butt
 import Avatar from "antd/lib/avatar/avatar";
 import { Content } from "antd/lib/layout/layout";
 import { translateMessage } from "constant/messageLanguage";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import ImgCrop from "antd-img-crop";
 import { Upload } from "antd";
 import moment from "moment";

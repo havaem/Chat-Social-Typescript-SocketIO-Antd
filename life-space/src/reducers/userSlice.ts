@@ -26,6 +26,7 @@ interface iUserSlice {
 		sCoin: string;
 		sExp: string;
 		language: string;
+		social: any;
 		status: any;
 	};
 	isLoading: boolean;
@@ -46,6 +47,7 @@ const initialState: iUserSlice = {
 		sCoin: "",
 		sExp: "",
 		language: "",
+		social: [],
 		status: {},
 	},
 	isLoading: false,

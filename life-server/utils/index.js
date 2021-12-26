@@ -76,6 +76,7 @@ exports.userDataResponse = (user) => {
 		sExp: user.sExp,
 		language: user.language,
 		status: user.status,
+		social: user.social,
 	};
 	data.token = this.signToken(user._id, 1440);
 	return data;

@@ -6,7 +6,6 @@ const userSchema = new Schema(
 		slug: {
 			type: String,
 			unique: true,
-			default: "",
 		},
 		name: {
 			type: String,
@@ -103,8 +102,7 @@ const userSchema = new Schema(
 		},
 		social: [
 			{
-				type: Schema.Types.ObjectId,
-				ref: "Social",
+				social_id: { type: Schema.Types.ObjectId, ref: "Social" },
 				username: {
 					type: String,
 					required: true,

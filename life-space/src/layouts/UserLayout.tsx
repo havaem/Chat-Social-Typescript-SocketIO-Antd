@@ -9,6 +9,7 @@ import Layout from "antd/lib/layout/layout";
 import Sider from "antd/lib/layout/Sider";
 import { Menu } from "antd";
 import { closeMenu, openMenu } from "reducers/menuSlice";
+import { pathConstants } from "constant/pathConstant";
 export default function UserLayout(): ReactElement {
 	const location = useLocation();
 	const dispatch = useAppDispatch();
@@ -17,16 +18,22 @@ export default function UserLayout(): ReactElement {
 	const userData = useAppSelector((state) => state.user.data);
 	const menuItems = [
 		{
+			key: "public-chat",
+			icon: <UserOutlined />,
+			title: translateMessage(userData.language, "Public Chat"),
+			link: pathConstants.publicChat,
+		},
+		{
 			key: "profile",
 			icon: <UserOutlined />,
 			title: translateMessage(userData.language, "Profile"),
-			link: "/profile",
+			link: pathConstants.profile,
 		},
 		{
 			key: "setting",
 			icon: <SettingOutlined />,
 			title: translateMessage(userData.language, "Settings"),
-			link: "/setting",
+			link: pathConstants.setting,
 		},
 	];
 	const getMenuActive = () => {

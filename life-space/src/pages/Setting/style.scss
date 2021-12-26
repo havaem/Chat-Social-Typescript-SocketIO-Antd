@@ -34,4 +34,32 @@
 			}
 		}
 	}
+	&_network {
+		display: flex;
+		flex-direction: column;
+		gap: 20px 0;
+		.setting_tab {
+			&-network {
+				display: flex;
+				flex-direction: column;
+				.network_item {
+					&:not(:last-child) {
+						border-bottom: 1px solid #eee;
+						margin-bottom: 10px;
+					}
+					display: flex;
+					align-items: center;
+					flex-wrap: wrap;
+					padding: 10px 0;
+					justify-content: space-between;
+					gap: 20px 10px;
+					&-title {
+						display: flex;
+						align-items: center;
+						gap: 0 20px;
+					}
+				}
+			}
+		}
+	}
 }

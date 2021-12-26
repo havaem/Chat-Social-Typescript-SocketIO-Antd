@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const socialSchema = new Schema({
+	icon: {
+		type: String,
+		required: true,
+	},
 	name: {
 		type: String,
 		required: true,
@@ -11,4 +15,4 @@ const socialSchema = new Schema({
 	},
 });
 const Social = mongoose.model("Social", socialSchema);
-export default Social;
+module.exports = Social;

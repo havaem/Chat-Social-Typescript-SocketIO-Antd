@@ -7,6 +7,7 @@ import Home from "pages/Home";
 import Login from "pages/Login";
 import Notfound from "pages/Notfound";
 import Profile from "pages/Profile";
+import PublicChat from "pages/PublicChat";
 import Register from "pages/Register";
 import ResetPassword from "pages/ResetPassword";
 import Setting from "pages/Setting";
@@ -30,6 +31,7 @@ export default function AppRoute(): ReactElement {
 					</>
 				) : (
 					<>
+						<Route path={pathConstants.publicChat} element={<PublicChat />} />
 						<Route path={pathConstants.profile} element={<Profile />} />
 						<Route path={`${pathConstants.profile}/:slug`} element={<Profile />} />
 						<Route path={pathConstants.setting} element={<Setting />} />
