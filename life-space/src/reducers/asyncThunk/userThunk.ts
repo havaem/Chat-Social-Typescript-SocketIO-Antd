@@ -99,3 +99,11 @@ export const userUpdate = createAsyncThunk(
 		}
 	}
 );
+export const userGetInfo = createAsyncThunk("user/userGetInfo", async (slug: string, { rejectWithValue }) => {
+	try {
+		const response = await userApi.getInfoUser(slug);
+		return response.data;
+	} catch (error: AxiosError | any) {
+		return rejectWithValue(error.data);
+	}
+});

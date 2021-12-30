@@ -20,4 +20,7 @@ export const messageApi = {
 	updateOne: (data: any) => {
 		return axiosClient.put(`${baseUrl}/`, data);
 	},
+	deleteAll: (id: string) => {
+		return axiosClient.delete(`${baseUrl}/conversation/${id}`);
+	},
 };

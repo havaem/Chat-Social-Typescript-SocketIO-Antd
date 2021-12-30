@@ -8,7 +8,6 @@ const MessageSchema = new Schema(
 		},
 		message: {
 			type: String,
-			required: true,
 		},
 		images: [
 			{
@@ -29,5 +28,5 @@ const MessageSchema = new Schema(
 		timestamps: true,
 	}
 );
-const Message = mongoose.model("Message", MessageSchema);
+const Message = mongoose.models.Message || mongoose.model("Message", MessageSchema);
 module.exports = Message;

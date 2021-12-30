@@ -24,3 +24,14 @@ export const messageCreateOne = createAsyncThunk(
 		}
 	}
 );
+export const messageDeleteAll = createAsyncThunk(
+	"message/messageDeleteAll",
+	async (id: string, { rejectWithValue }) => {
+		try {
+			const response = await messageApi.deleteAll(id);
+			return response.data;
+		} catch (error: AxiosError | any) {
+			return rejectWithValue(error.data);
+		}
+	}
+);

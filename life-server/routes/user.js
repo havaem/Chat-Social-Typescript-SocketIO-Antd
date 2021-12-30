@@ -10,6 +10,7 @@ const {
 	resetPassword,
 	changePassword,
 	updateUser,
+	getInfoUser,
 } = require("../controllers/user");
 const Router = express.Router();
 // Control
@@ -17,6 +18,7 @@ Router.route("/register").post(register);
 Router.route("/login").post(login);
 Router.route("/loginGoogle").post(loginGoogle);
 Router.route("/password").post(forgetPassword).put(resetPassword).patch(currentUser, changePassword);
+Router.route("/:slug").get(getInfoUser);
 Router.route("/").get(currentUser, getCurrentUser).post(verifyUser).put(currentUser, updateUser);
 //Setting
 module.exports = Router;

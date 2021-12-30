@@ -2,6 +2,7 @@ import {
 	userChangePassword,
 	userCurrent,
 	userForgetPassword,
+	userGetInfo,
 	userLogin,
 	userLoginGoogle,
 	userRegister,
@@ -151,6 +152,16 @@ export const userSlice = createSlice({
 			Cookies.set("language", state.data.language);
 		});
 		builder.addCase(userUpdate.rejected, (state) => {
+			state.isLoading = false;
+		});
+		// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+		builder.addCase(userGetInfo.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(userGetInfo.fulfilled, (state, { payload }: any) => {
+			state.isLoading = false;
+		});
+		builder.addCase(userGetInfo.rejected, (state) => {
 			state.isLoading = false;
 		});
 		// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

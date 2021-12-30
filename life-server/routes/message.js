@@ -6,6 +6,7 @@ const {
 	deleteOne,
 	getAll,
 	getAllByConversation,
+	deleteAll,
 } = require("../controllers/message.js");
 const { currentUser } = require("../middlewares/currentUser.js");
 const Router = express.Router();
@@ -13,5 +14,5 @@ const upload = require("../utils/multer");
 // Control
 Router.route("/").get(getAll).post(currentUser, upload.array("images"), createOne);
 Router.route("/:id").get(getOne).put(updateOne).delete(deleteOne);
-Router.route("/conversation/:conversationId").get(getAllByConversation);
+Router.route("/conversation/:conversationId").get(getAllByConversation).delete(deleteAll);
 module.exports = Router;

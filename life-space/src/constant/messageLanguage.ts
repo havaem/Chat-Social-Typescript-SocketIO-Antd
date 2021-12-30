@@ -1,5 +1,9 @@
 const messageConstant = [
 	{
+		eng: "Type a message",
+		vn: "Nhập tin nhắn",
+	},
+	{
 		eng: "Attach a photo",
 		vn: "Đính kèm ảnh",
 	},

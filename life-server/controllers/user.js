@@ -1,5 +1,6 @@
 // const mongoose = require("mongoose");
 const User = require("../models/User");
+const Conversation = require("../models/Conversation");
 const { comparePassword, userDataResponse, signTokenNoExpired, signToken } = require("../utils");
 const { google } = require("googleapis");
 const { message } = require("../message");
@@ -8,7 +9,6 @@ const jwt = require("jsonwebtoken");
 const oauth2Client = new google.auth.OAuth2(process.env.YOUR_CLIENT_ID, process.env.CLIENT_SECRET);
 exports.register = async (req, res, next) => {
 	try {
-		// const path = req.protocol + "://" + req.get("host");
 		const user = await User.create({ ...req.body });
 		await sendEmail(
 			req.body.email,
@@ -16,6 +16,9 @@ exports.register = async (req, res, next) => {
 			"Verify your account",
 			"Click me to verify"
 		);
+		const conversation = await Conversation.findById("61c74b80c9de5ae944e64903");
+		conversation.members.push({ user: user._id });
+		await conversation.save();
 		res.status(201).json({
 			message: message.userCreated,
 		});
@@ -103,6 +106,10 @@ exports.loginGoogle = async (req, res, next) => {
 				},
 			});
 			newUser = await newUser.populate("level", "name benefits");
+
+			const conversation = await Conversation.findById("61c74b80c9de5ae944e64903");
+			conversation.members.push({ user: newUser._id });
+			await conversation.save();
 			res.status(201).json({
 				...userDataResponse(newUser),
 			});
@@ -215,6 +222,32 @@ exports.updateUser = async (req, res, next) => {
 			...dataResponse,
 		});
 	} catch (error) {
+		next(error);
+	}
+};
+exports.getInfoUser = async (req, res, next) => {
+	try {
+		const user = await User.findOne({ slug: req.params.slug }).populate({
+			path: "social",
+			populate: {
+				path: "social_id",
+				select: "icon name prefix",
+			},
+		});
+		if (!user) return res.status(401).json({ message: message.userNotFound });
+		const dataResponse = userDataResponse(
+			await user.populate({
+				path: "social",
+				populate: {
+					path: "social_id",
+					select: "icon name prefix",
+				},
+			})
+		);
+		delete dataResponse.token;
+		res.status(200).json({ ...dataResponse });
+	} catch (error) {
+		console.log("error: ", error);
 		next(error);
 	}
 };

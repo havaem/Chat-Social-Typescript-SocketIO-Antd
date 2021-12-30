@@ -1,7 +1,7 @@
 import { Button, Card, Col, Row, Modal, Tooltip, Skeleton, Layout } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import { useAppDispatch, useAppSelector } from "app/hook";
-import { ReactElement, useState } from "react";
+import { ReactElement, useLayoutEffect, useState } from "react";
 import QRCode from "qrcode";
 import {
 	MailTwoTone,
@@ -13,14 +13,14 @@ import {
 	CheckCircleFilled,
 	InstagramOutlined,
 	DownloadOutlined,
-	HighlightOutlined,
 } from "@ant-design/icons";
 import "./style.scss";
 import { translateMessage } from "constant/messageLanguage";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { Navigate, useParams } from "react-router-dom";
-import { userUpdate } from "reducers/asyncThunk/userThunk";
-import { openNoti } from "utils/Notification";
+import { userGetInfo } from "reducers/asyncThunk/userThunk";
+import { FaSpotify } from "react-icons/fa";
+import Loading from "pages/Loading";
 
 export default function Profile(): ReactElement {
 	const { slug } = useParams();
@@ -28,9 +28,7 @@ export default function Profile(): ReactElement {
 	const isLoading = useAppSelector((state) => state.user.isLoading);
 	const userData = useAppSelector((state) => state.user.data);
 	const isLogin = useAppSelector((state) => state.user.data._id) ? true : false;
-	const [userDataBio, setUserDataBio] = useState(
-		userData.bio ? userData.bio : translateMessage(userData.language, "No bio")
-	);
+	const [userDataFetch, setUserDataFetch] = useState<any>(null);
 	const handleShowQRCode = async () => {
 		Modal.info({
 			centered: true,
@@ -50,8 +48,8 @@ export default function Profile(): ReactElement {
 			),
 		});
 	};
-	const renderSocial = () =>
-		userData.social.map((item: any) => {
+	const renderSocial = (social: any) =>
+		social.map((item: any) => {
 			let Btn;
 			switch (item.social_id.name) {
 				case "Facebook":
@@ -65,6 +63,9 @@ export default function Profile(): ReactElement {
 					break;
 				case "Instagram":
 					Btn = <InstagramOutlined />;
+					break;
+				case "Spotify":
+					Btn = <FaSpotify size={22} />;
 					break;
 				default:
 					return null;
@@ -80,126 +81,242 @@ export default function Profile(): ReactElement {
 				</Tooltip>
 			);
 		});
-	const handleChangeBio = async (value: any) => {
-		try {
-			setUserDataBio(value);
-			const response = await dispatch(userUpdate({ bio: value })).unwrap();
-			openNoti({
-				type: "success",
-				description: translateMessage(userData.language, response.message),
-				message: translateMessage(userData.language, "Success"),
-			});
-		} catch (error: any) {
-			openNoti({
-				type: "error",
-				message: translateMessage(userData.language, "Failed"),
-				description: translateMessage(userData.language, error.message),
-			});
-		}
-	};
-	// useLayoutEffect(() => {}, [slug]);
+	useLayoutEffect(() => {
+		const fetchUser = async () => {
+			try {
+				if (slug) {
+					const response = await dispatch(userGetInfo(slug)).unwrap();
+					setUserDataFetch(response.user);
+				}
+			} catch (error: any) {
+				console.log(error);
+			}
+		};
+		slug && fetchUser();
+	}, [dispatch, slug]);
 	return isLogin ? (
-		<>
-			<Layout className="profile resize">
-				<Card bordered={false}>
-					{isLoading ? (
-						<Skeleton avatar paragraph={{ rows: 4 }} />
-					) : (
-						<Row gutter={[8, 16]} className="profile_card">
-							<Col xs={24} sm={24} md={15}>
-								<div className="profile_card-content">
-									<Avatar size={150} src={userData.avatar} className="content_avatar" />
-									<div className="content_info">
-										<p className="content_info-name">
-											{userData.name}
-											{userData.status.is_admin && (
-												<Tooltip
-													title={translateMessage(userData.language, "Verify")}
+		!isLoading ? (
+			<>
+				{slug && userDataFetch ? (
+					<Layout className="profile resize">
+						<Card bordered={false}>
+							{isLoading ? (
+								<Skeleton avatar paragraph={{ rows: 4 }} />
+							) : (
+								<Row gutter={[8, 16]} className="profile_card">
+									<Col xs={24} sm={24} md={15}>
+										<div className="profile_card-content">
+											<Avatar
+												size={150}
+												src={userDataFetch.avatar}
+												className="content_avatar"
+											/>
+											<div className="content_info">
+												<p className="content_info-name">
+													{userDataFetch.name}
+													{userDataFetch.status.is_admin && (
+														<Tooltip
+															title={translateMessage(
+																userData.language,
+																"Verify"
+															)}
+														>
+															<CheckCircleFilled style={{ color: "#3f87f5" }} />
+														</Tooltip>
+													)}
+												</p>
+												<p className="content_info-slug">@{userDataFetch.slug}</p>
+												<Button
+													className="content_info-button"
+													type="primary"
+													onClick={handleShowQRCode}
+													style={{ marginBottom: 10 }}
 												>
-													<CheckCircleFilled style={{ color: "#3f87f5" }} />
-												</Tooltip>
+													{translateMessage(userData.language, "Message")}
+												</Button>
+												<Button
+													className="content_info-button"
+													type="primary"
+													danger
+													onClick={handleShowQRCode}
+												>
+													{translateMessage(userData.language, "QR Code")}
+												</Button>
+											</div>
+										</div>
+									</Col>
+									<Col xs={24} sm={24} md={9} className="profile_card-wrapper">
+										<div className="profile_card-info">
+											{userDataFetch.birthday && (
+												<div className="info_item">
+													<div className="info_item-title">
+														<CalendarTwoTone />
+														<p>
+															{translateMessage(userData.language, "Birthday")}:{" "}
+														</p>
+													</div>
+													<p className="info_item-text">
+														{getDate(userDataFetch.birthday)}
+													</p>
+												</div>
 											)}
-										</p>
-										<p className="content_info-slug">@{userData.slug}</p>
-										<Button
-											className="content_info-button"
-											type="primary"
-											onClick={handleShowQRCode}
-											style={{ marginBottom: 10 }}
-										>
-											{translateMessage(userData.language, "Message")}
-										</Button>
-										<Button
-											className="content_info-button"
-											type="primary"
-											danger
-											onClick={handleShowQRCode}
-										>
-											{translateMessage(userData.language, "QR Code")}
-										</Button>
-									</div>
-								</div>
+											<div className="info_item">
+												<div className="info_item-title">
+													<MailTwoTone />
+													<p>Email: </p>
+												</div>
+												<p className="info_item-text">{userDataFetch.email}</p>
+											</div>
+											{userDataFetch.phone && (
+												<div className="info_item">
+													<div className="info_item-title">
+														<PhoneTwoTone />
+														<p>
+															{translateMessage(
+																userData.language,
+																"Phone Number"
+															)}
+															:{" "}
+														</p>
+													</div>
+													<p className="info_item-text">{userDataFetch.phone}</p>
+												</div>
+											)}
+										</div>
+										<div className="profile_card-social">
+											{() => {
+												renderSocial(userDataFetch.social);
+											}}
+										</div>
+									</Col>
+								</Row>
+							)}
+						</Card>
+						<Card bordered={false}>Music Player</Card>
+						<Row gutter={[20, 16]}>
+							<Col xs={24} sm={24} md={16}>
+								<Card bordered={false} title={translateMessage(userData.language, "Bio")}>
+									<Paragraph
+										ellipsis={{
+											rows: 2,
+											expandable: true,
+											symbol: translateMessage(userData.language, "More"),
+										}}
+									>
+										{userDataFetch.bio
+											? userDataFetch.bio
+											: translateMessage(userData.language, "No bio")}
+									</Paragraph>
+								</Card>
 							</Col>
-							<Col xs={24} sm={24} md={9} className="profile_card-wrapper">
-								<div className="profile_card-info">
-									{userData.birthday && (
-										<div className="info_item">
-											<div className="info_item-title">
-												<CalendarTwoTone />
-												<p>{translateMessage(userData.language, "Birthday")}: </p>
-											</div>
-											<p className="info_item-text">{getDate(userData.birthday)}</p>
-										</div>
-									)}
-									<div className="info_item">
-										<div className="info_item-title">
-											<MailTwoTone />
-											<p>Email: </p>
-										</div>
-										<p className="info_item-text">{userData.email}</p>
-									</div>
-									{userData.phone && (
-										<div className="info_item">
-											<div className="info_item-title">
-												<PhoneTwoTone />
-												<p>{translateMessage(userData.language, "Phone Number")}: </p>
-											</div>
-											<p className="info_item-text">{userData.phone}</p>
-										</div>
-									)}
-								</div>
-								<div className="profile_card-social">{renderSocial()}</div>
+							<Col xs={24} sm={24} md={8}>
+								<Card bordered={false}>Archived</Card>
 							</Col>
 						</Row>
-					)}
-				</Card>
-				<Card bordered={false}>Music Player</Card>
-				<Row gutter={[20, 16]}>
-					<Col xs={24} sm={24} md={16}>
-						<Card bordered={false} title={translateMessage(userData.language, "Bio")}>
-							<Paragraph
-								ellipsis={{
-									rows: 2,
-									expandable: true,
-									symbol: translateMessage(userData.language, "More"),
-								}}
-								editable={{
-									tooltip: translateMessage(userData.language, "Click to edit your bio"),
-									onChange: handleChangeBio,
-									maxLength: 200,
-									autoSize: { maxRows: 10, minRows: 2 },
-								}}
-							>
-								{userDataBio}
-							</Paragraph>
+					</Layout>
+				) : (
+					<Layout className="profile resize">
+						<Card bordered={false}>
+							<Row gutter={[8, 16]} className="profile_card">
+								<Col xs={24} sm={24} md={15}>
+									<div className="profile_card-content">
+										<Avatar size={150} src={userData.avatar} className="content_avatar" />
+										<div className="content_info">
+											<p className="content_info-name">
+												{userData.name}
+												{userData.status.is_admin && (
+													<Tooltip
+														title={translateMessage(userData.language, "Verify")}
+													>
+														<CheckCircleFilled style={{ color: "#3f87f5" }} />
+													</Tooltip>
+												)}
+											</p>
+											<p className="content_info-slug">@{userData.slug}</p>
+											<Button
+												className="content_info-button"
+												type="primary"
+												onClick={handleShowQRCode}
+												style={{ marginBottom: 10 }}
+											>
+												{translateMessage(userData.language, "Message")}
+											</Button>
+											<Button
+												className="content_info-button"
+												type="primary"
+												danger
+												onClick={handleShowQRCode}
+											>
+												{translateMessage(userData.language, "QR Code")}
+											</Button>
+										</div>
+									</div>
+								</Col>
+								<Col xs={24} sm={24} md={9} className="profile_card-wrapper">
+									<div className="profile_card-info">
+										{userData.birthday && (
+											<div className="info_item">
+												<div className="info_item-title">
+													<CalendarTwoTone />
+													<p>{translateMessage(userData.language, "Birthday")}: </p>
+												</div>
+												<p className="info_item-text">{getDate(userData.birthday)}</p>
+											</div>
+										)}
+										<div className="info_item">
+											<div className="info_item-title">
+												<MailTwoTone />
+												<p>Email: </p>
+											</div>
+											<p className="info_item-text">{userData.email}</p>
+										</div>
+										{userData.phone && (
+											<div className="info_item">
+												<div className="info_item-title">
+													<PhoneTwoTone />
+													<p>
+														{translateMessage(userData.language, "Phone Number")}:{" "}
+													</p>
+												</div>
+												<p className="info_item-text">{userData.phone}</p>
+											</div>
+										)}
+									</div>
+									<div className="profile_card-social">
+										{() => {
+											renderSocial(userDataFetch.social);
+										}}
+									</div>
+								</Col>
+							</Row>
 						</Card>
-					</Col>
-					<Col xs={24} sm={24} md={8}>
-						<Card bordered={false}>Archived</Card>
-					</Col>
-				</Row>
-			</Layout>
-		</>
+						<Card bordered={false}>Music Player</Card>
+						<Row gutter={[20, 16]}>
+							<Col xs={24} sm={24} md={16}>
+								<Card bordered={false} title={translateMessage(userData.language, "Bio")}>
+									<Paragraph
+										ellipsis={{
+											rows: 2,
+											expandable: true,
+											symbol: translateMessage(userData.language, "More"),
+										}}
+									>
+										{userData.bio
+											? userData.bio
+											: translateMessage(userData.language, "No bio")}
+									</Paragraph>
+								</Card>
+							</Col>
+							<Col xs={24} sm={24} md={8}>
+								<Card bordered={false}>Archived</Card>
+							</Col>
+						</Row>
+					</Layout>
+				)}
+			</>
+		) : (
+			<Loading />
+		)
 	) : (
 		<Navigate to="/login" />
 	);

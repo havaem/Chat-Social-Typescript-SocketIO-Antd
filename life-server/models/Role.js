@@ -20,6 +20,10 @@ const RoleSchema = new Schema(
 				required: true,
 			},
 		],
+		order: {
+			type: Number,
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

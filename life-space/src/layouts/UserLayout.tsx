@@ -1,5 +1,5 @@
 import Header from "components/Header";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { translateMessage } from "constant/messageLanguage";
 import CollapsedMenu from "components/CollapsedMenu";
@@ -10,6 +10,8 @@ import Sider from "antd/lib/layout/Sider";
 import { Menu } from "antd";
 import { closeMenu, openMenu } from "reducers/menuSlice";
 import { pathConstants } from "constant/pathConstant";
+import { APP_SOCKET_URL } from "constant";
+import { io } from "socket.io-client";
 export default function UserLayout(): ReactElement {
 	const location = useLocation();
 	const dispatch = useAppDispatch();
@@ -41,6 +43,10 @@ export default function UserLayout(): ReactElement {
 		const menuItem = menuItems.find((item) => item.link === pathname);
 		return menuItem ? menuItem.key : "profile";
 	};
+	const socket = useRef(io(APP_SOCKET_URL));
+	useEffect(() => {
+		socket.current.emit("addUser", userData._id);
+	}, [socket, userData._id]);
 	return (
 		<>
 			<Header />

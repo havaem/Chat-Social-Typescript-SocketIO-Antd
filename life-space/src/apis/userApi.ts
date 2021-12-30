@@ -44,4 +44,7 @@ export const userApi = {
 			},
 		});
 	},
+	getInfoUser: (slug: string) => {
+		return axiosClient.get(`${baseUrl}/${slug}`);
+	},
 };

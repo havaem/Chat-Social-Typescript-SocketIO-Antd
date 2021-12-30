@@ -23,7 +23,7 @@ export default function NetworkTab({ data }: Props): ReactElement {
 			id = index;
 			return item.social_id._id === "61c410f1532482851b9d016e";
 		});
-		return data.social[id].username;
+		return data?.social[id]?.username || "";
 	});
 	function handleChange(value: string) {
 		setNetwork(networks.find((item: any) => item._id === value));

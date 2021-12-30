@@ -139,6 +139,6 @@ userSchema.pre("save", function (next) {
 		});
 	} else next();
 });
-const User = mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 User.createIndexes();
 module.exports = User;

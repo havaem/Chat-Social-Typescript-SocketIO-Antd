@@ -93,7 +93,12 @@
 			padding: 10px;
 			padding-top: unset;
 			margin-top: auto;
+			display: flex;
+			flex-wrap: wrap;
 			a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				color: #72849a;
 				span {
 					font-size: 22px;
